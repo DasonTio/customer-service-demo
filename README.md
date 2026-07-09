@@ -23,6 +23,18 @@ First start pulls the embedding model (~274MB); the compose file mounts your
 host `~/.ollama` so models you already have are reused. Override the chat
 model with `CHAT_MODEL=llama3.2 docker compose up -d`.
 
+**Host-Ollama mode (recommended on macOS):** native Ollama gets Metal GPU
+acceleration, while the containerized one is CPU-only. Run:
+
+```shell
+ollama serve                       # if not already running
+ollama pull nomic-embed-text
+docker compose -f docker-compose.yml -f docker-compose.host-ollama.yml up -d --build
+```
+
+This keeps db/backend/frontend in Docker and points the backend at
+`host.docker.internal:11434`.
+
 Then:
 
 1. Open http://localhost:3000

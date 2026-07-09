@@ -2,6 +2,7 @@ import json
 from collections.abc import AsyncIterator
 
 from src.chat.constants import (
+    GUARDRAIL_REMINDER,
     MAX_HISTORY_MESSAGES,
     NO_CONTEXT_PLACEHOLDER,
     SYSTEM_PROMPT_TEMPLATE,
@@ -26,6 +27,7 @@ def build_messages(payload: ChatRequest, chunks: list[RetrievedChunk]) -> list[d
     for message in payload.history[-MAX_HISTORY_MESSAGES:]:
         messages.append({"role": message.role.value, "content": message.content})
     messages.append({"role": "user", "content": payload.message})
+    messages.append({"role": "system", "content": GUARDRAIL_REMINDER})
     return messages
 
 

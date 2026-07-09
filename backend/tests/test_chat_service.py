@@ -1,7 +1,7 @@
 import json
 
 from src.chat import service
-from src.chat.constants import NO_CONTEXT_PLACEHOLDER
+from src.chat.constants import GUARDRAIL_REMINDER, NO_CONTEXT_PLACEHOLDER
 from src.chat.schemas import ChatMessage, ChatRequest, Role
 from tests.conftest import FakeLLM
 
@@ -27,8 +27,9 @@ def test_build_messages_includes_context_and_history(sample_chunk):
     assert messages[0]["role"] == "system"
     assert "Refunds are available within 30 days" in messages[0]["content"]
     assert "faq.md" in messages[0]["content"]
-    assert [m["role"] for m in messages[1:]] == ["user", "assistant", "user"]
-    assert messages[-1]["content"] == "Can I get a refund?"
+    assert [m["role"] for m in messages[1:]] == ["user", "assistant", "user", "system"]
+    assert messages[-2]["content"] == "Can I get a refund?"
+    assert messages[-1]["content"] == GUARDRAIL_REMINDER
 
 
 def test_build_messages_without_context_uses_placeholder():
@@ -41,8 +42,8 @@ def test_build_messages_caps_history():
     history = [ChatMessage(role=Role.USER, content=f"message {i}") for i in range(30)]
     payload = ChatRequest(message="latest", history=history)
     messages = service.build_messages(payload, [])
-    # system + capped history + current message
-    assert len(messages) == 1 + 10 + 1
+    # system + capped history + current message + guardrail reminder
+    assert len(messages) == 1 + 10 + 1 + 1
     assert messages[1]["content"] == "message 20"
 
 
