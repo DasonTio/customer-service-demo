@@ -8,7 +8,7 @@ from src.chat.router import router as chat_router
 from src.config import settings
 from src.database import engine
 from src.documents.router import router as documents_router
-from src.llm.client import OllamaClient
+from src.llm.client import GeminiClient
 from src.models import Base
 
 SHOW_DOCS_IN = {"local", "staging"}
@@ -16,7 +16,7 @@ SHOW_DOCS_IN = {"local", "staging"}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    app.state.llm = OllamaClient()
+    app.state.llm = GeminiClient()
     async with engine.begin() as conn:
         await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         await conn.run_sync(Base.metadata.create_all)

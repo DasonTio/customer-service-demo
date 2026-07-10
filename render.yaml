@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: customer-service-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        sync: false # paste your Neon connection string in the Render dashboard
+      - key: LLM_GEMINI_API_KEY
+        sync: false # paste your Gemini API key in the Render dashboard
+      - key: LLM_CHAT_MODEL
+        value: gemini-flash-latest
+      - key: LLM_EMBED_MODEL
+        value: gemini-embedding-2
+      - key: CORS_ORIGINS
+        sync: false # e.g. ["https://your-app.pages.dev"]

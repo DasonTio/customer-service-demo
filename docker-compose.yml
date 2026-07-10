@@ -15,43 +15,16 @@ services:
       timeout: 3s
       retries: 10
 
-  ollama:
-    image: ollama/ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      # Reuse models already pulled on the host.
-      - ${HOME}/.ollama:/root/.ollama
-    healthcheck:
-      test: ["CMD", "ollama", "list"]
-      interval: 5s
-      timeout: 5s
-      retries: 12
-
-  ollama-init:
-    image: ollama/ollama
-    depends_on:
-      ollama:
-        condition: service_healthy
-    environment:
-      OLLAMA_HOST: http://ollama:11434
-    entrypoint: ["/bin/sh", "-c"]
-    command: ["ollama pull nomic-embed-text && ollama pull ${CHAT_MODEL:-qwen2.5:3b}"]
-    restart: "no"
-
   backend:
     build: ./backend
     ports:
       - "8000:8000"
     environment:
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/customer_service
-      LLM_OLLAMA_BASE_URL: http://ollama:11434
-      LLM_CHAT_MODEL: ${CHAT_MODEL:-qwen2.5:3b}
+      LLM_GEMINI_API_KEY: ${GEMINI_API_KEY:?set GEMINI_API_KEY in .env or the shell}
     depends_on:
       db:
         condition: service_healthy
-      ollama-init:
-        condition: service_completed_successfully
 
   frontend:
     build: ./frontend

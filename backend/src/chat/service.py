@@ -8,7 +8,7 @@ from src.chat.constants import (
     SYSTEM_PROMPT_TEMPLATE,
 )
 from src.chat.schemas import ChatRequest
-from src.llm.client import OllamaClient
+from src.llm.client import GeminiClient
 from src.llm.exceptions import LLMUnavailable
 from src.rag.retriever import RetrievedChunk
 
@@ -32,7 +32,7 @@ def build_messages(payload: ChatRequest, chunks: list[RetrievedChunk]) -> list[d
 
 
 async def stream_answer(
-    llm: OllamaClient,
+    llm: GeminiClient,
     payload: ChatRequest,
     chunks: list[RetrievedChunk],
 ) -> AsyncIterator[str]:

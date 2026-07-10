@@ -2,11 +2,11 @@ from typing import Annotated
 
 from fastapi import Depends, Request
 
-from src.llm.client import OllamaClient
+from src.llm.client import GeminiClient
 
 
-async def get_llm(request: Request) -> OllamaClient:
+async def get_llm(request: Request) -> GeminiClient:
     return request.app.state.llm
 
 
-LLMClient = Annotated[OllamaClient, Depends(get_llm)]
+LLMClient = Annotated[GeminiClient, Depends(get_llm)]

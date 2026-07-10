@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.documents.models import Document, DocumentChunk
-from src.llm.client import OllamaClient
+from src.llm.client import GeminiClient
 from src.rag.constants import RETRIEVAL_MAX_DISTANCE, RETRIEVAL_TOP_K
 
 
@@ -20,7 +20,7 @@ class RetrievedChunk:
 
 async def retrieve(
     db: AsyncSession,
-    llm: OllamaClient,
+    llm: GeminiClient,
     query: str,
     top_k: int = RETRIEVAL_TOP_K,
     max_distance: float = RETRIEVAL_MAX_DISTANCE,

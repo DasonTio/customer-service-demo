@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.documents.constants import SUPPORTED_CONTENT_TYPES, SUPPORTED_EXTENSIONS
 from src.documents.exceptions import EmptyDocument
 from src.documents.models import Document, DocumentChunk
-from src.llm.client import OllamaClient
+from src.llm.client import GeminiClient
 from src.rag.chunker import chunk_text
 
 
@@ -29,7 +29,7 @@ def extract_text(filename: str, data: bytes) -> str:
 
 async def ingest_document(
     db: AsyncSession,
-    llm: OllamaClient,
+    llm: GeminiClient,
     filename: str,
     content_type: str,
     text: str,
